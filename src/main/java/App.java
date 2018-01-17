@@ -14,11 +14,11 @@ public class App {
                 "Barack Obama who served as the 44th President of the United States, visited Germany. "
                 + "Bill Gates is the founder of the Microsoft. Bill Gates has visited the Researchgate team in Berlin";
 
-        demoStandfordNerwithFilter (text);
+        demoStandfordNERWithFilter (text);
 
     }
 
-    public static void demoStandfordNerwithFilter (String text)throws IOException, ClassNotFoundException {
+    public static void demoStandfordNERWithFilter (String text)throws IOException, ClassNotFoundException {
         String serializedClassifier = "classifier/english.all.3class.distsim.crf.ser.gz";
         IStandforNER standforNER = new StandforNER(serializedClassifier);
 
@@ -29,7 +29,7 @@ public class App {
         }
     }
 
-    public static void demoStandfordNer (String text)throws IOException, ClassNotFoundException {
+    public static void demoStandfordNER (String text)throws IOException, ClassNotFoundException {
 
         String serializedClassifier = "classifier/english.all.3class.distsim.crf.ser.gz";
         IStandforNER standforNER = new StandforNER(serializedClassifier);
