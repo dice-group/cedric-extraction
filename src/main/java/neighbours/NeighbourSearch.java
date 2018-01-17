@@ -18,7 +18,7 @@ public class NeighbourSearch extends AbstractSet<INamedObject> {
         MinMaxPriorityQueue<DistantObject> queue = MinMaxPriorityQueue.maximumSize(k).create();
 
         for(INamedObject o: collection){
-            double min = queue.peekLast().distant;
+            double min = queue.isEmpty()?0.0:queue.peekLast().distant;
             if(measure.inFilter(key, o.getName(), min)){
                 double d = measure.getDistance(key, o.getName());
                 queue.add(new DistantObject(o, d));

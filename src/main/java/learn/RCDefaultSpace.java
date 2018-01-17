@@ -13,6 +13,7 @@ import neighbours.NeighbourSearch;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class RCDefaultSpace implements IRCSearchSpace{
 
@@ -95,6 +96,21 @@ public class RCDefaultSpace implements IRCSearchSpace{
         @Override
         public String getName() {
             return feature.getFeature();
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof IRCSearchResult)) return false;
+            IRCSearchResult that = (IRCSearchResult) o;
+            return Objects.equals(getFeature(), that.getFeature()) &&
+                    Objects.equals(category.getPredicate(), that.getClassification());
+        }
+
+        @Override
+        public int hashCode() {
+
+            return Objects.hash(getFeature(), category.getPredicate());
         }
     }
 }

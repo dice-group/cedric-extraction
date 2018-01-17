@@ -130,7 +130,7 @@ public class TfidfBayesEstimator implements IBayesEstimator {
 
     private class TermStats{
         private long termCount = 0;
-        private Map<String, Integer> termFrequency;
+        private Map<String, Integer> termFrequency = new HashMap<>();
 
         public void incrFreq(String s){
             termFrequency.put(s, get(s)+1);

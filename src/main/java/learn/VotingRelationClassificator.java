@@ -48,12 +48,17 @@ public class VotingRelationClassificator implements IRelationClassificator {
                 }
 
                 BigDecimal act = sum.get(r.getClassification());
-                act = act.add(new BigDecimal(r.getAccuracy()), MathContext.DECIMAL128);
+                BigDecimal add = new BigDecimal(r.getAccuracy());
+                add = add.divide(new BigDecimal(result.size()), MathContext.DECIMAL128);
+                act = act.add(add, MathContext.DECIMAL128);
 
                 sum.put(r.getClassification(), act);
             }
 
-            BigDecimal half = new BigDecimal(0.5);
+            if(sum.isEmpty())
+                continue;
+
+            BigDecimal half = new BigDecimal(0.0);
             for(String s: unseen)
                 sum.put(s, half);
 
