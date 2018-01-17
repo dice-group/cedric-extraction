@@ -10,9 +10,9 @@ import java.util.List;
 
 public class App {
     public static void main( String[] args ) throws IOException, ClassNotFoundException {
-        String text = "Berlin is capital of Germany. Berlin was part of east Germany. " +
-                "Barack obama who served as the 44th President of the United States, visited Germany "
-                + "along Bill Gates founder of the Microsoft.";
+        String text = "Berlin is the capital of Germany. " +
+                "Barack Obama who served as the 44th President of the United States, visited Germany. "
+                + "Bill Gates is the founder of the Microsoft. Bill Gates has visited the Researchgate team in Berlin";
 
         demoStandfordNerwithFilter (text);
 
