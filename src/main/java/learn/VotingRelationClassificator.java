@@ -1,5 +1,7 @@
 package learn;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.MinMaxPriorityQueue;
 import com.google.common.collect.Multimap;
 import model.ILexicalEntity;
 
@@ -74,7 +76,7 @@ public class VotingRelationClassificator implements IRelationClassificator {
             initPlace = initPlace.divide(new BigDecimal(2), MathContext.DECIMAL128);
         }
 
-        String classification = "";
+        String classification = "unknown";
         BigDecimal max = new BigDecimal(0);
 
         for(Map.Entry<String, BigDecimal> e: regressionMap.entrySet()) {
@@ -85,6 +87,46 @@ public class VotingRelationClassificator implements IRelationClassificator {
         }
 
         return classification;
+    }
+
+
+    public Multimap<String, String> getTypicalWordsPerRelation(int k){
+
+        Map<String, MinMaxPriorityQueue<IRCSearchResult>> queues = new HashMap<>();
+        SearchResultComparator comp = new SearchResultComparator();
+
+        for(IRCSearchSpace space: model.getModel().values()){
+            if(space instanceof RCDefaultSpace){
+                Set<IRCSearchResult> results = ((RCDefaultSpace) space).getPossibleResults();
+                for(IRCSearchResult result: results){
+                    String pred = result.getClassification();
+
+                    if(!queues.containsKey(pred)){
+                        queues.put(pred,MinMaxPriorityQueue.orderedBy(comp).maximumSize(k).create());
+                    }
+
+                    queues.get(pred).add(result);
+                }
+            }
+        }
+
+        Multimap<String, String> out = HashMultimap.create();
+
+        for(Map.Entry<String, MinMaxPriorityQueue<IRCSearchResult>> e: queues.entrySet()){
+            for(IRCSearchResult result: e.getValue()){
+                out.put(e.getKey(), result.getFeature().getFeature());
+            }
+        }
+
+        return out;
+    }
+
+    private class SearchResultComparator implements Comparator<IRCSearchResult>{
+
+        @Override
+        public int compare(IRCSearchResult o1, IRCSearchResult o2) {
+            return (int) Math.signum(o2.getAccuracy()-o1.getAccuracy());
+        }
     }
 
     @Override

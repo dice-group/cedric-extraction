@@ -31,6 +31,10 @@ public class RCModel {
         space.extend(data);
     }
 
+    Map<LabelKey, IRCSearchSpace> getModel(){
+        return model;
+    }
+
 
     public Multimap<String, IRCSearchResult> predict(String firstLabel, String secondLabel, Iterable<String> features){
         Multimap<String, IRCSearchResult> out = HashMultimap.create();

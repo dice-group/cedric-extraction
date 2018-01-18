@@ -39,6 +39,9 @@ public class MongoLoadingPipe extends APipe<IDBLoadingTask, ILabelledEntity> {
             }
 
             try{
+                int length = cursor.count();
+                double last = 0.0;
+
                 int count = 0;
                 while(cursor.hasNext() && count < obj.getLimit()){
                     DBObject dbO = cursor.next();
@@ -47,6 +50,11 @@ public class MongoLoadingPipe extends APipe<IDBLoadingTask, ILabelledEntity> {
                     if(entity != null) {
                         sink.push(entity);
                         count++;
+
+                        if(((double)count/length)-last >=0.1){
+                            last = ((double)count/length);
+                            System.out.println("Processed "+(int)(last*100)+"% of data ( "+count+" / "+length+" )");
+                        }
                     }
                 }
             }finally{

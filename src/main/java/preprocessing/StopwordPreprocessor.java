@@ -5,6 +5,7 @@ import model.ILabelledEntity;
 import model.SimpleLabelledEntity;
 import org.apache.lucene.analysis.CharArraySet;
 import org.apache.lucene.analysis.StopAnalyzer;
+import org.apache.lucene.util.Version;
 import pipeline.APipe;
 
 import java.util.ArrayList;
@@ -15,7 +16,14 @@ public class StopwordPreprocessor extends APipe<ILabelledEntity, ILabelledEntity
     private CharArraySet stopwords;
 
     public StopwordPreprocessor(CharArraySet set){
-        this.stopwords = set;
+        this.stopwords = CharArraySet.copy(Version.LUCENE_36, set);
+        this.stopwords.add("-lrb-");
+        this.stopwords.add("-rrb-");
+        this.stopwords.add(".");
+        this.stopwords.add("``");
+        this.stopwords.add("\'\'");
+        this.stopwords.add("--");
+        this.stopwords.add("\'s");
     }
 
     public StopwordPreprocessor(){

@@ -20,7 +20,7 @@ public class SimpleClassificationTestResult implements IClassificationTestResult
     }
 
     @Override
-    public String getPredicatedRelation() {
+    public String getPredictedRelation() {
         return prediction;
     }
 

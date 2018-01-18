@@ -6,7 +6,7 @@ public interface IClassificationTestResult {
 
     public ILexicalEntity getEntity();
 
-    public String getPredicatedRelation();
+    public String getPredictedRelation();
 
     public String getValidRelation();
 

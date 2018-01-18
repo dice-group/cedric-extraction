@@ -11,9 +11,7 @@ import neighbours.INamedObject;
 import neighbours.JaccardNgramMeasure;
 import neighbours.NeighbourSearch;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class RCDefaultSpace implements IRCSearchSpace{
 
@@ -51,6 +49,15 @@ public class RCDefaultSpace implements IRCSearchSpace{
 
         }
 
+    }
+
+    public Set<IRCSearchResult> getPossibleResults(){
+        Set<IRCSearchResult> out = new HashSet<>();
+
+        for(INamedObject obj: search)
+            out.add((IRCSearchResult)obj);
+
+        return out;
     }
 
     private class RCDefaultResult implements INamedObject, IRCSearchResult{
@@ -112,5 +119,6 @@ public class RCDefaultSpace implements IRCSearchSpace{
 
             return Objects.hash(getFeature(), category.getPredicate());
         }
+
     }
 }
