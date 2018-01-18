@@ -2,7 +2,6 @@ import bayes.BayesTrainPipe;
 import bayes.IBayesEstimator;
 import bayes.TfidfBayesEstimator;
 import com.google.common.base.Stopwatch;
-import com.google.common.collect.Multimap;
 import io.IDBConfiguration;
 import io.IDBLoadingTask;
 import io.LemmaEntityMapper;
@@ -10,26 +9,34 @@ import io.MongoLoadingPipe;
 import io.simple.SimpleDBConfiguration;
 import io.simple.SimpleDBCredentials;
 import io.simple.SimpleDBLoadingTask;
+import javafx.util.Pair;
 import learn.*;
-import learn.validate.*;
+import learn.validate.ClassificationTestingPipe;
+import learn.validate.IClassificationTestResult;
 import model.ILabelledEntity;
 import model.ITrainingData;
 import pipeline.IPipe;
+import pipeline.MergePipe;
 import pipeline.SingleCachedSink;
 import preprocessing.FilterPreprocessor;
 import preprocessing.RelationCollector;
 import preprocessing.StopwordPreprocessor;
 import preprocessing.WindowPreprocessor;
 import preprocessing.filter.PredicateFilter;
+import preprocessing.string.NERStringPreprocessor;
+import preprocessing.string.PrintOutSink;
 
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
-public class RelationExtraction {
+public class ExtractionTester {
 
     public static void main(String[] args){
 
-        int window = 4;
+        int window = 2;
         int k = 5;
 
         IBayesEstimator estimator = new TfidfBayesEstimator(1.0);
@@ -39,7 +46,7 @@ public class RelationExtraction {
         SingleCachedSink<IRelationClassificator> classificatorSink = new SingleCachedSink<>();
 
         IPipe<ITrainingData, IRelationClassificator> trainModelPipe = new RelationTrainPipe(
-                new VotingRelationFactory(
+                new BayesRelationFactory(
                         new RCDefaultFactory(k, estimator)
                 )
         );
@@ -74,13 +81,13 @@ public class RelationExtraction {
 
         //Setup train data loading
         IDBConfiguration configuration = new SimpleDBConfiguration(
-               "ds231987.mlab.com",  31987,
+                "ds231987.mlab.com",  31987,
                 new SimpleDBCredentials("admin", "admin".toCharArray() ),
                 "distantsupervision"
         );
 
         IDBLoadingTask trainTask =
-                new SimpleDBLoadingTask(configuration, "TrainingDataSet", null);
+                new SimpleDBLoadingTask(configuration, "DataSet", null);
 
         System.out.println("Start training phase: ");
 
@@ -90,41 +97,14 @@ public class RelationExtraction {
 
         System.out.println("Time for Training: "+watch.elapsed(TimeUnit.MILLISECONDS)+" ms");
 
-
-        //Typical words
         IRelationClassificator classificator = classificatorSink.getObj();
 
-        if(classificator instanceof BayesRelationClassificator){
-            Multimap<String, String> map = ((BayesRelationClassificator) classificator).getTypicalWordsPerRelation(10);
-            System.out.println("Typical words: ");
-            for(Map.Entry<String, Collection<String>> e: map.asMap().entrySet()){
-                System.out.println(e.getKey()+": "+e.getValue());
-            }
-
-        }
-
-
-        //Setup scores
-        List<ITestScorer> scores = new ArrayList<>();
-
-        for(String pred: relationColl.getRelations())
-            scores.add(new F1Score(pred));
-
-        scores.add(new PerformanceScorer());
-
-
-        //Test Pipe
-        SingleCachedSink<ITestResult> performanceSink = new SingleCachedSink<>();
-
-        IPipe<IClassificationTestResult, ITestResult> performancePipe = new PerformanceTestingPipe(
-               scores
-        );
-        performancePipe.setSink(performanceSink);
+        MergePipe<Pair<String, String>, IClassificationTestResult> merge = new MergePipe<>();
 
         IPipe<ILabelledEntity, IClassificationTestResult> testResultIPipe = new ClassificationTestingPipe(
-            classificatorSink.getObj()
+                classificator
         );
-        testResultIPipe.setSink(performancePipe);
+        testResultIPipe.setSink(merge.getSecondSink());
 
         windowPreprocessor = new WindowPreprocessor(window);
         windowPreprocessor.setSink(testResultIPipe);
@@ -132,30 +112,48 @@ public class RelationExtraction {
         stopPreprocessor = new StopwordPreprocessor();
         stopPreprocessor.setSink(windowPreprocessor);
 
-        filterPipe.setSink(stopPreprocessor);
+        NERStringPreprocessor stringProcessor = new NERStringPreprocessor();
+        stringProcessor.setSink(stopPreprocessor);
+        stringProcessor.setTagSink(merge.getFirstSink());
 
-        IPipe<IDBLoadingTask, ILabelledEntity>  testLoader = new MongoLoadingPipe(
-                new LemmaEntityMapper()
-        );
-        testLoader.setSink(filterPipe);
+        merge.setSink(new PrintOutSink());
 
-        IDBLoadingTask testTask =
-                new SimpleDBLoadingTask(configuration, "TestDataSet", null);
+        BufferedReader br = null;
 
+        try {
 
-        //Performance test
-        System.out.println("Start testing phase: ");
+            br = new BufferedReader(new InputStreamReader(System.in));
 
-        watch = Stopwatch.createStarted();
-        testLoader.push(testTask);
-        watch.stop();
+            while (true) {
 
-        System.out.println("Time for Testing: "+watch.elapsed(TimeUnit.MILLISECONDS)+" ms");
+                System.out.print("Enter something : ");
+                String input = br.readLine();
 
-        ITestResult result = performanceSink.getObj();
+                if ("q".equals(input)) {
+                    System.out.println("Exit!");
+                    System.exit(0);
+                }
 
-        for(Map.Entry<String, Double> score: result.getResults().entrySet()){
-            System.out.println(score.getKey()+": "+score.getValue());
+                System.out.println("Processing input: "+input);
+                stringProcessor.push(input);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
+
+
+
+
+
     }
+
 }

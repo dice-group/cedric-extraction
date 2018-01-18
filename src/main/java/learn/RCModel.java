@@ -19,8 +19,8 @@ public class RCModel {
 
 
     public void addData(ITrainingData data){
-        LabelKey key = new LabelKey(data.getCategory().getFirstLabel(),
-                                    data.getCategory().getSecondLabel());
+        LabelKey key = new LabelKey(data.getCategory().getFirstLabel().toLowerCase(),
+                                    data.getCategory().getSecondLabel().toLowerCase());
 
         if(!model.containsKey(key)){
             model.put(key, factory.create());
@@ -39,14 +39,14 @@ public class RCModel {
     public Multimap<String, IRCSearchResult> predict(String firstLabel, String secondLabel, Iterable<String> features){
         Multimap<String, IRCSearchResult> out = HashMultimap.create();
 
-        LabelKey first = new LabelKey(firstLabel, secondLabel);
+        LabelKey first = new LabelKey(firstLabel.toLowerCase(), secondLabel.toLowerCase());
         if(model.containsKey(first)){
             IRCSearchSpace space = model.get(first);
 
             out.putAll(space.search(features));
         }
 
-        LabelKey second = new LabelKey(secondLabel, firstLabel);
+        LabelKey second = new LabelKey(secondLabel.toLowerCase(), firstLabel.toLowerCase());
         if(!first.equals(second) && model.containsKey(second)){
             IRCSearchSpace space = model.get(second);
 
