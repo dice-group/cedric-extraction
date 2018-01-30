@@ -14,20 +14,29 @@ public class NeighbourSearch extends AbstractSet<INamedObject> {
         this.measure = measure;
     }
 
-    public List<INamedObject> getNearestNeighbour(String key, int k){
+    public List<DistantObject> getNNDistant(String key, int k){
         MinMaxPriorityQueue<DistantObject> queue = MinMaxPriorityQueue.maximumSize(k).create();
 
         for(INamedObject o: collection){
-            double min = queue.isEmpty()?0.0:queue.peekLast().distant;
+            double min = queue.isEmpty()?1.0:queue.peekLast().distant;
             if(measure.inFilter(key, o.getName(), min)){
                 double d = measure.getDistance(key, o.getName());
                 queue.add(new DistantObject(o, d));
             }
         }
 
-        List<INamedObject> objs = new ArrayList<>();
+        List<DistantObject> objs = new ArrayList<>();
         while(!queue.isEmpty())
-            objs.add(queue.pollFirst().content);
+            objs.add(queue.pollFirst());
+
+        return objs;
+    }
+
+    public List<INamedObject> getNearestNeighbour(String key, int k){
+        List<INamedObject> objs = new ArrayList<>();
+
+        for(DistantObject obj: getNNDistant(key, k))
+            objs.add(obj.content);
 
         return objs;
     }
@@ -58,14 +67,23 @@ public class NeighbourSearch extends AbstractSet<INamedObject> {
     }
 
 
-    private class DistantObject implements Comparable<DistantObject>{
+    public class DistantObject implements Comparable<DistantObject>{
 
         private INamedObject content;
+
         private double distant;
 
         public DistantObject(INamedObject content, double distant) {
             this.content = content;
             this.distant = distant;
+        }
+
+        public INamedObject getContent() {
+            return content;
+        }
+
+        public double getDistant() {
+            return distant;
         }
 
         @Override

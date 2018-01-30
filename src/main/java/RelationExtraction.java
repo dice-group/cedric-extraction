@@ -29,55 +29,39 @@ public class RelationExtraction {
 
     public static void main(String[] args){
 
-        int window = 4;
-        int k = 5;
+        int window = 2;
+        int k = 20;
 
         IBayesEstimator estimator = new TfidfBayesEstimator(1.0);
+
+        RelationExtPipeFactory factory = new RelationExtPipeFactory();
 
 
         //Train Pipe
         SingleCachedSink<IRelationClassificator> classificatorSink = new SingleCachedSink<>();
 
-        IPipe<ITrainingData, IRelationClassificator> trainModelPipe = new RelationTrainPipe(
+        IPipe<ILabelledEntity, IRelationClassificator> trainModelPipe  = factory.createTrainingPipe(window,estimator,
                 new VotingRelationFactory(
                         new RCDefaultFactory(k, estimator)
-                )
-        );
+                ));
         trainModelPipe.setSink(classificatorSink);
 
-
-        IPipe<ILabelledEntity, ITrainingData> trainTransformPipe = new TrainingDataPipe();
-        trainTransformPipe.setSink(trainModelPipe);
-
-        IPipe<ILabelledEntity, ILabelledEntity> trainBayesPipe = new BayesTrainPipe(estimator);
-        trainBayesPipe.setSink(trainTransformPipe);
-
-        IPipe<ILabelledEntity, ILabelledEntity> windowPreprocessor = new WindowPreprocessor(window);
-        windowPreprocessor.setSink(trainBayesPipe);
-
-        IPipe<ILabelledEntity, ILabelledEntity> stopPreprocessor = new StopwordPreprocessor();
-        stopPreprocessor.setSink(windowPreprocessor);
-
         RelationCollector relationColl = new RelationCollector();
-        relationColl.setSink(stopPreprocessor);
-
-        IPipe<ILabelledEntity, ILabelledEntity> filterPipe = new FilterPreprocessor(
-                Arrays.asList(new PredicateFilter("residence"))
-        );
-        filterPipe.setSink(relationColl);
+        relationColl.setSink(trainModelPipe);
 
         IPipe<IDBLoadingTask, ILabelledEntity>  trainLoader = new MongoLoadingPipe(
                 new LemmaEntityMapper()
         );
-        trainLoader.setSink(filterPipe);
+        trainLoader.setSink(relationColl);
 
 
         //Setup train data loading
         IDBConfiguration configuration = new SimpleDBConfiguration(
-               "ds231987.mlab.com",  31987,
+               "ds113738.mlab.com",  13738,
                 new SimpleDBCredentials("admin", "admin".toCharArray() ),
-                "distantsupervision"
+                "relationextraction"
         );
+
 
         IDBLoadingTask trainTask =
                 new SimpleDBLoadingTask(configuration, "TrainingDataSet", null);
@@ -107,8 +91,11 @@ public class RelationExtraction {
         //Setup scores
         List<ITestScorer> scores = new ArrayList<>();
 
-        for(String pred: relationColl.getRelations())
+        for(String pred: relationColl.getRelations()) {
+            scores.add(new PrecisionScore(pred));
+            scores.add(new RecallScore(pred));
             scores.add(new F1Score(pred));
+        }
 
         scores.add(new PerformanceScorer());
 
@@ -121,23 +108,16 @@ public class RelationExtraction {
         );
         performancePipe.setSink(performanceSink);
 
-        IPipe<ILabelledEntity, IClassificationTestResult> testResultIPipe = new ClassificationTestingPipe(
-            classificatorSink.getObj()
+        IPipe<ILabelledEntity, IClassificationTestResult> testResultIPipe = factory.createTestingPipe(
+                classificatorSink.getObj(),
+                window
         );
         testResultIPipe.setSink(performancePipe);
-
-        windowPreprocessor = new WindowPreprocessor(window);
-        windowPreprocessor.setSink(testResultIPipe);
-
-        stopPreprocessor = new StopwordPreprocessor();
-        stopPreprocessor.setSink(windowPreprocessor);
-
-        filterPipe.setSink(stopPreprocessor);
 
         IPipe<IDBLoadingTask, ILabelledEntity>  testLoader = new MongoLoadingPipe(
                 new LemmaEntityMapper()
         );
-        testLoader.setSink(filterPipe);
+        testLoader.setSink(testResultIPipe);
 
         IDBLoadingTask testTask =
                 new SimpleDBLoadingTask(configuration, "TestDataSet", null);
@@ -154,8 +134,8 @@ public class RelationExtraction {
 
         ITestResult result = performanceSink.getObj();
 
-        for(Map.Entry<String, Double> score: result.getResults().entrySet()){
-            System.out.println(score.getKey()+": "+score.getValue());
+        for(ITestScorer score: result.getScores()){
+            System.out.println(score.getScoreName()+": "+result.getResults().get(score.getScoreName()));
         }
     }
 }

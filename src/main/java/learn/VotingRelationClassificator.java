@@ -43,7 +43,7 @@ public class VotingRelationClassificator implements IRelationClassificator{
         }
 
         String classification = "unknown";
-        BigDecimal max = new BigDecimal(0);
+        BigDecimal max = new BigDecimal(Integer.MIN_VALUE);
 
         for(Map.Entry<String, BigDecimal> e: votingMap.entrySet()) {
             if(e.getValue().compareTo(max)>0){

@@ -30,10 +30,10 @@ public class RCDefaultSpace implements IRCSearchSpace{
         Multimap<String, IRCSearchResult> out = HashMultimap.create();
 
         for(String s: features){
-            List<INamedObject> l =  search.getNearestNeighbour(s, k);
+            List<NeighbourSearch.DistantObject> l =  search.getNNDistant(s, k);
 
-            for(INamedObject o: l)
-                out.put(s, (IRCSearchResult)o);
+            for(NeighbourSearch.DistantObject o: l)
+                out.put(s, new DistantScaledResult(o.getDistant(), (IRCSearchResult)o.getContent()));
         }
 
         return out;

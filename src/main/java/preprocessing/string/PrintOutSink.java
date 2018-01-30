@@ -2,15 +2,17 @@ package preprocessing.string;
 
 import javafx.util.Pair;
 import learn.validate.IClassificationTestResult;
+import model.Relation;
+import model.RelationEntity;
 import pipeline.ISink;
 
-public class PrintOutSink implements ISink<Pair<Pair<String, String>, IClassificationTestResult>> {
+public class PrintOutSink implements ISink<Relation> {
     @Override
-    public void push(Pair<Pair<String, String>, IClassificationTestResult> obj) {
+    public void push(Relation obj) {
 
-        String first = obj.getKey().getKey();
-        String second = obj.getKey().getValue();
-        String predicate = obj.getValue().getPredictedRelation();
+        String first = obj.getSubject().getUri();
+        String second = obj.getObject().getUri();
+        String predicate = obj.getRelation();
 
         if(!predicate.equalsIgnoreCase("unknown"))
             System.out.println("<"+first+ "> <"+predicate+ "> <"+second+">");

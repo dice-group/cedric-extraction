@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.nlp.simple.Sentence;
 import javafx.util.Pair;
 import model.ILabelledEntity;
+import model.NEREntity;
 import model.SimpleLabelledEntity;
 import pipeline.APipe;
 import pipeline.ISink;
@@ -14,9 +15,9 @@ import java.util.List;
 public class NERStringPreprocessor extends APipe<String, ILabelledEntity> {
 
 
-    private ISink<Pair<String, String>> tagSink;
+    private ISink<Pair<NEREntity, NEREntity>> tagSink;
 
-    public void setTagSink(ISink<Pair<String, String>> tagSink) {
+    public void setTagSink(ISink<Pair<NEREntity, NEREntity>> tagSink) {
         this.tagSink = tagSink;
     }
 
@@ -71,7 +72,10 @@ public class NERStringPreprocessor extends APipe<String, ILabelledEntity> {
                 back.addAll(clean(tokens.get(i)));
             }
 
-            tagSink.push(new Pair<>(firstName, secondName));
+            tagSink.push(new Pair<>(
+                    new NEREntity(obj, firstName, firstLabel),
+                    new NEREntity(obj, secondName, secondLabel)
+                    ));
 
             sink.push(new SimpleLabelledEntity(firstLabel, secondLabel, "unknown",
                     ImmutableList.copyOf(front), ImmutableList.copyOf(inner), ImmutableList.copyOf(back)));

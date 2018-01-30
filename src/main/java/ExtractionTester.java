@@ -1,4 +1,3 @@
-import bayes.BayesTrainPipe;
 import bayes.IBayesEstimator;
 import bayes.TfidfBayesEstimator;
 import com.google.common.base.Stopwatch;
@@ -11,19 +10,14 @@ import io.simple.SimpleDBCredentials;
 import io.simple.SimpleDBLoadingTask;
 import javafx.util.Pair;
 import learn.*;
-import learn.validate.ClassificationTestingPipe;
 import learn.validate.IClassificationTestResult;
 import model.ILabelledEntity;
-import model.ITrainingData;
+import model.Relation;
 import pipeline.IPipe;
 import pipeline.MergePipe;
 import pipeline.SingleCachedSink;
 import preprocessing.FilterPreprocessor;
-import preprocessing.RelationCollector;
-import preprocessing.StopwordPreprocessor;
-import preprocessing.WindowPreprocessor;
 import preprocessing.filter.PredicateFilter;
-import preprocessing.string.NERStringPreprocessor;
 import preprocessing.string.PrintOutSink;
 
 import java.io.BufferedReader;
@@ -41,49 +35,30 @@ public class ExtractionTester {
 
         IBayesEstimator estimator = new TfidfBayesEstimator(1.0);
 
+        RelationExtPipeFactory factory = new RelationExtPipeFactory();
+
 
         //Train Pipe
         SingleCachedSink<IRelationClassificator> classificatorSink = new SingleCachedSink<>();
 
-        IPipe<ITrainingData, IRelationClassificator> trainModelPipe = new RelationTrainPipe(
-                new BayesRelationFactory(
-                        new RCDefaultFactory(k, estimator)
-                )
-        );
+        IPipe<ILabelledEntity, IRelationClassificator> trainModelPipe =
+                factory.createTrainingPipe(window, estimator,
+                        new VotingRelationFactory(
+                                new RCDefaultFactory(k, estimator)
+                        ));
         trainModelPipe.setSink(classificatorSink);
-
-
-        IPipe<ILabelledEntity, ITrainingData> trainTransformPipe = new TrainingDataPipe();
-        trainTransformPipe.setSink(trainModelPipe);
-
-        IPipe<ILabelledEntity, ILabelledEntity> trainBayesPipe = new BayesTrainPipe(estimator);
-        trainBayesPipe.setSink(trainTransformPipe);
-
-        IPipe<ILabelledEntity, ILabelledEntity> windowPreprocessor = new WindowPreprocessor(window);
-        windowPreprocessor.setSink(trainBayesPipe);
-
-        IPipe<ILabelledEntity, ILabelledEntity> stopPreprocessor = new StopwordPreprocessor();
-        stopPreprocessor.setSink(windowPreprocessor);
-
-        RelationCollector relationColl = new RelationCollector();
-        relationColl.setSink(stopPreprocessor);
-
-        IPipe<ILabelledEntity, ILabelledEntity> filterPipe = new FilterPreprocessor(
-                Arrays.asList(new PredicateFilter("residence"))
-        );
-        filterPipe.setSink(relationColl);
 
         IPipe<IDBLoadingTask, ILabelledEntity>  trainLoader = new MongoLoadingPipe(
                 new LemmaEntityMapper()
         );
-        trainLoader.setSink(filterPipe);
+        trainLoader.setSink(trainModelPipe);
 
 
         //Setup train data loading
         IDBConfiguration configuration = new SimpleDBConfiguration(
-                "ds231987.mlab.com",  31987,
+                "ds113738.mlab.com",  13738,
                 new SimpleDBCredentials("admin", "admin".toCharArray() ),
-                "distantsupervision"
+                "relationextraction"
         );
 
         IDBLoadingTask trainTask =
@@ -99,24 +74,8 @@ public class ExtractionTester {
 
         IRelationClassificator classificator = classificatorSink.getObj();
 
-        MergePipe<Pair<String, String>, IClassificationTestResult> merge = new MergePipe<>();
-
-        IPipe<ILabelledEntity, IClassificationTestResult> testResultIPipe = new ClassificationTestingPipe(
-                classificator
-        );
-        testResultIPipe.setSink(merge.getSecondSink());
-
-        windowPreprocessor = new WindowPreprocessor(window);
-        windowPreprocessor.setSink(testResultIPipe);
-
-        stopPreprocessor = new StopwordPreprocessor();
-        stopPreprocessor.setSink(windowPreprocessor);
-
-        NERStringPreprocessor stringProcessor = new NERStringPreprocessor();
-        stringProcessor.setSink(stopPreprocessor);
-        stringProcessor.setTagSink(merge.getFirstSink());
-
-        merge.setSink(new PrintOutSink());
+        IPipe<String, Relation> processor = factory.createRelationExtractionPipe(classificator, window);
+        processor.setSink(new PrintOutSink());
 
         BufferedReader br = null;
 
@@ -135,7 +94,7 @@ public class ExtractionTester {
                 }
 
                 System.out.println("Processing input: "+input);
-                stringProcessor.push(input);
+                processor.push(input);
             }
 
         } catch (IOException e) {
