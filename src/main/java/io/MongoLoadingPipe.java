@@ -7,12 +7,25 @@ import pipeline.APipe;
 
 import java.net.UnknownHostException;
 
+/**
+ * A pipe which takes a loading task as input and then push read entities (mapped
+ * as labelled entities).
+ *
+ * The pipe emit a object for each entries (for one loading task there are N entities emitted).
+ * When the task is finished the pipe emits a stop signal.
+ *
+ * @author Cedric Richter
+ */
 public class MongoLoadingPipe extends APipe<IDBLoadingTask, ILabelledEntity> {
 
     public static final String STOP_SIGNAL = "mongo";
 
     private IEntityMapper mapper;
 
+    /**
+     *
+     * @param mapper a mapper which used to map MongoDB entries to labelled entities
+     */
     public MongoLoadingPipe(IEntityMapper mapper) {
         this.mapper = mapper;
     }

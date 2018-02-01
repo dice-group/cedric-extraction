@@ -5,6 +5,18 @@ import model.ILexicalEntity;
 
 import java.util.*;
 
+/**
+ *
+ * An implementation for Bayes estimator.
+ * It estimates probabilities based on the term frequency inverse document frequency count
+ * (tfidf).
+ *
+ * The Tfidf approach gives features a high probability which are typically used in the
+ * context of the given category. Features which are often used with different categories
+ * got a low probability.
+ *
+ * @author Cedric Richter
+ */
 public class TfidfBayesEstimator implements IBayesEstimator {
 
     private double alpha;
@@ -14,6 +26,10 @@ public class TfidfBayesEstimator implements IBayesEstimator {
     private Map<String, Integer> shareDocs = new HashMap<>();
     private Map<ICategory, TermStats> stats = new HashMap<>();
 
+    /**
+     *
+     * @param alpha the bayes smoothing for unknown features
+     */
     public TfidfBayesEstimator(double alpha) {
         this.alpha = alpha;
     }

@@ -5,7 +5,13 @@ import model.ITrainingData;
 import java.io.IOException;
 import java.util.HashMap;
 
-public class BayesRelationFactory implements IRelationClassificatorFactory {
+/**
+ *
+ * A factory for a bayes relation classifier
+ *
+ * @author Cedric Richter
+ */
+public class BayesRelationFactory implements IRelationClassifierFactory {
 
     private IRCSearchSpaceFactory factory;
 
@@ -15,18 +21,18 @@ public class BayesRelationFactory implements IRelationClassificatorFactory {
 
 
     @Override
-    public IRelationClassificator trainModel(Iterable<ITrainingData> data) {
+    public IRelationClassifier trainModel(Iterable<ITrainingData> data) {
 
         RCModel model = new RCModel(new HashMap<>(), factory);
 
         for(ITrainingData d: data)
             model.addData(d);
 
-        return new BayesRelationClassificator(model);
+        return new BayesRelationClassifier(model);
     }
 
     @Override
-    public IRelationClassificator loadModel(String path) throws IOException {
-        return null;
+    public IRelationClassifier loadModel(String path) throws IOException {
+        throw new UnsupportedOperationException();
     }
 }

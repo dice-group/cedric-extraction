@@ -6,14 +6,21 @@ import pipeline.APipe;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RelationTrainPipe extends APipe<ITrainingData, IRelationClassificator>{
+/**
+ *
+ * A pipe which allows to train a given relation classifier.
+ * The pipe can be reused after a stop signal.
+ *
+ * @author Cedric Richter
+ */
+public class RelationTrainPipe extends APipe<ITrainingData, IRelationClassifier>{
 
     public static final String STOP_SIGNAL = "relationTrainer";
 
-    private IRelationClassificatorFactory factory;
+    private IRelationClassifierFactory factory;
     private List<ITrainingData> trainingData = new ArrayList<>();
 
-    public RelationTrainPipe(IRelationClassificatorFactory factory) {
+    public RelationTrainPipe(IRelationClassifierFactory factory) {
         this.factory = factory;
     }
 
@@ -25,7 +32,7 @@ public class RelationTrainPipe extends APipe<ITrainingData, IRelationClassificat
 
     @Override
     public void stopSignal(String type){
-        IRelationClassificator classificator = factory.trainModel(trainingData);
+        IRelationClassifier classificator = factory.trainModel(trainingData);
         trainingData.clear();
         sink.push(classificator);
 

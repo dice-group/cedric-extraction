@@ -1,5 +1,10 @@
 package model;
 
+/**
+ * A model for a relation between two entities
+ *
+ * @author Cedric Richter
+ */
 public class Relation {
 
     private RelationEntity subject, object;

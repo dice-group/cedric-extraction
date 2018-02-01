@@ -12,11 +12,21 @@ import pipeline.ISink;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A preprocessor which selects entities of a given string.
+ * Then each combination of entities is created and a labelled entity is build
+ *
+ * @author Cedric Richter
+ */
 public class NERStringPreprocessor extends APipe<String, ILabelledEntity> {
 
 
     private ISink<Pair<NEREntity, NEREntity>> tagSink;
 
+    /**
+     * A sink which can be used to extract combinations of found NER entities
+     * @param tagSink a sink which takes pairs of entities
+     */
     public void setTagSink(ISink<Pair<NEREntity, NEREntity>> tagSink) {
         this.tagSink = tagSink;
     }

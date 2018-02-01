@@ -8,6 +8,11 @@ import pipeline.APipe;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A pipe which shrink the front and back window to a given number
+ *
+ * @author Cedric Richter
+ */
 public class WindowPreprocessor extends APipe<ILabelledEntity, ILabelledEntity> {
 
     private int k;

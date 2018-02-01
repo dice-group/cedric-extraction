@@ -4,6 +4,11 @@ import com.google.common.collect.MinMaxPriorityQueue;
 
 import java.util.*;
 
+/**
+ * A implementation for k nearest neighbours search
+ *
+ * @author Cedric Richter
+ */
 public class NeighbourSearch extends AbstractSet<INamedObject> {
 
     private IStringMeasure measure;
@@ -14,6 +19,12 @@ public class NeighbourSearch extends AbstractSet<INamedObject> {
         this.measure = measure;
     }
 
+    /**
+     * Gets the k nearest neighbours together with the distance to the point
+     * @param key search key
+     * @param k number of neighbours
+     * @return list of neighbours with distance
+     */
     public List<DistantObject> getNNDistant(String key, int k){
         MinMaxPriorityQueue<DistantObject> queue = MinMaxPriorityQueue.maximumSize(k).create();
 
@@ -32,6 +43,12 @@ public class NeighbourSearch extends AbstractSet<INamedObject> {
         return objs;
     }
 
+    /**
+     * Gets the k nearest neighbours
+     * @param key search key
+     * @param k number of neighbours
+     * @return list of neighbours
+     */
     public List<INamedObject> getNearestNeighbour(String key, int k){
         List<INamedObject> objs = new ArrayList<>();
 

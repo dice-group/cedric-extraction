@@ -1,5 +1,14 @@
 package learn.validate;
 
+/**
+ *
+ * Calculates the recall for a single relation.
+ *
+ * Recall:
+ *      (True Positive) / (True Positive + False Negative)
+ *
+ * @author Cedric Richter
+ */
 public class RecallScore implements ITestScorer {
     private int truePos = 0;
     private int falseNeg = 0;

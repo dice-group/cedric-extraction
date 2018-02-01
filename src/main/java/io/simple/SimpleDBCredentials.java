@@ -3,6 +3,12 @@ package io.simple;
 
 import io.IDBCredentials;
 
+/**
+ *
+ * A simple flat implementation for MongoDB credentials
+ *
+ * @author Cedric Richter
+ */
 public class SimpleDBCredentials implements IDBCredentials{
     private String name;
     private char[] password;

@@ -1,5 +1,10 @@
 package model;
 
+/**
+ * A NEREntity which is linked to a entity in an Ontology.
+ *
+ * @author Cedric Richter
+ */
 public class RelationEntity extends NEREntity {
 
     private String uri;

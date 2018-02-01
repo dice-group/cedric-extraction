@@ -15,6 +15,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+/**
+ * Based on:
+ * {@see https://github.com/dice-group/FOX/blob/master/src/main/java/org/aksw/fox/tools/linking/common/Agdistis.java}
+ *
+ * @author Cedric Richter
+ */
 public class Agdistis {
 
     // maps AGDISTIS index to real index

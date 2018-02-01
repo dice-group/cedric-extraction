@@ -13,6 +13,13 @@ import neighbours.NeighbourSearch;
 
 import java.util.*;
 
+/**
+ * A default implementation for the RCSearchSpace
+ *
+ * It is based on k Nearest Neighbours as search approach
+ *
+ * @author Cedric Richter
+ */
 public class RCDefaultSpace implements IRCSearchSpace{
 
     private int k;
@@ -51,6 +58,10 @@ public class RCDefaultSpace implements IRCSearchSpace{
 
     }
 
+    /**
+     *
+     * @return the set of saved results
+     */
     public Set<IRCSearchResult> getPossibleResults(){
         Set<IRCSearchResult> out = new HashSet<>();
 

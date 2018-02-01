@@ -1,5 +1,14 @@
 package learn.validate;
 
+/**
+ *
+ * Represent the F1 Score for single relations.
+ *
+ * F1 Score:
+ *          2 * (Precision * Recall) / (Precision + Recall)
+ *
+ * @author Cedric Richter
+ */
 public class F1Score implements ITestScorer{
 
     private int truePos = 0;
@@ -8,6 +17,10 @@ public class F1Score implements ITestScorer{
 
     private String relation;
 
+    /**
+     *
+     * @param relation the relation to test on (it will only take results into account with the given relation)
+     */
     public F1Score(String relation) {
         this.relation = relation;
     }

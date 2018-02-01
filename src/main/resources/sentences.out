@@ -1,0 +1,14 @@
+<http://dbpedia.org/resource/Barack_Obama> <http://dbpedia.org/ontology/spouse> <http://dbpedia.org/resource/Michelle_Obama>.
+<http://dbpedia.org/resource/Barack_Obama> <http://dbpedia.org/ontology/placeOfBurial> <http://scms.eu/new_york>.
+<http://dbpedia.org/resource/Michelle_Obama> <http://dbpedia.org/ontology/placeOfBurial> <http://scms.eu/new_york>.
+<http://scms.eu/tony_hall> <http://dbpedia.org/ontology/president> <http://scms.eu/bbc>.
+<http://dbpedia.org/resource/Michael_Jackson> <http://dbpedia.org/ontology/birthPlace> <http://scms.eu/gary>.
+<http://dbpedia.org/resource/Michael_Jackson> <http://dbpedia.org/ontology/birthPlace> <http://scms.eu/indiana>.
+<http://dbpedia.org/resource/Michael_Jackson> <http://dbpedia.org/ontology/birthPlace> <http://dbpedia.org/resource/Los_Angeles>.
+<http://dbpedia.org/resource/Michael_Jackson> <http://dbpedia.org/ontology/birthPlace> <http://scms.eu/california>.
+<http://scms.eu/gary> <http://dbpedia.org/ontology/subregion> <http://scms.eu/indiana>.
+<http://scms.eu/gary> <http://dbpedia.org/ontology/subregion> <http://dbpedia.org/resource/Los_Angeles>.
+<http://scms.eu/gary> <http://dbpedia.org/ontology/subregion> <http://scms.eu/california>.
+<http://scms.eu/indiana> <http://dbpedia.org/ontology/subregion> <http://dbpedia.org/resource/Los_Angeles>.
+<http://scms.eu/indiana> <http://dbpedia.org/ontology/subregion> <http://scms.eu/california>.
+<http://dbpedia.org/resource/Los_Angeles> <http://dbpedia.org/ontology/subregion> <http://scms.eu/california>.

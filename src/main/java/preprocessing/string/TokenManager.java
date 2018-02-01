@@ -10,6 +10,12 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Based on:
+ * {@see https://github.com/dice-group/FOX/blob/master/src/main/java/org/aksw/fox/data/TokenManager.java}
+ *
+ * @author Cedric Richter
+ */
 public class TokenManager {
     public static Logger LOG        = LogManager.getLogger(TokenManager.class);
 

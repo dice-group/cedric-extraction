@@ -1,5 +1,14 @@
 package learn.validate;
 
+/**
+ *
+ * Calculates the precision for a single relation.
+ *
+ * Precision:
+ *      (True Positive) / (True Positive + False Positive)
+ *
+ * @author Cedric Richter
+ */
 public class PrecisionScore implements ITestScorer {
     private int truePos = 0;
     private int falsePos = 0;

@@ -7,6 +7,11 @@ import pipeline.APipe;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A pipe which transforms labelled entities to training data for the relation classifier
+ *
+ * @author Cedric Richter
+ */
 public class TrainingDataPipe extends APipe<ILabelledEntity, ITrainingData> {
     @Override
     public void push(ILabelledEntity obj) {

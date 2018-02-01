@@ -9,6 +9,12 @@ import org.bson.BSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ * Same behaviour as {@see DefaultEntityMapper} but lemmatize the given features.
+ *
+ * @author Cedric Richter
+ */
 public class LemmaEntityMapper implements IEntityMapper {
 
     @Override

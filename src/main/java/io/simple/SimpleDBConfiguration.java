@@ -3,6 +3,12 @@ package io.simple;
 import io.IDBConfiguration;
 import io.IDBCredentials;
 
+/**
+ *
+ * A simple flat implementation for a MongoDB configuration
+ *
+ * @author Cedric Richter
+ */
 public class SimpleDBConfiguration implements IDBConfiguration {
 
     private String hostname;

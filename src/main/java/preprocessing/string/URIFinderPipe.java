@@ -12,6 +12,13 @@ import pipeline.APipe;
 
 import java.util.*;
 
+/**
+ * A pipe which link the given entities to URIs of an web ontology
+ * Based on:
+ * {@see https://github.com/dice-group/FOX/blob/master/src/main/java/org/aksw/fox/Fox.java}
+ *
+ * @author Cedric Richter
+ */
 public class URIFinderPipe extends APipe<Pair<NEREntity, NEREntity>, Pair<RelationEntity, RelationEntity>> {
     private Agdistis linking;
 

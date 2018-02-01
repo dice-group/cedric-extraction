@@ -1,5 +1,11 @@
 package io;
 
+/**
+ *
+ * String constants for the entity mapping.
+ *
+ * @author Cedric Richter
+ */
 public class MongoConstants {
 
     public static final String SOURCE = "source";

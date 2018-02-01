@@ -10,6 +10,14 @@ import pipeline.APipe;
 
 import java.util.*;
 
+/**
+ * Sometimes different labels are used with the same meaning.
+ * Like place and location are meant to be the same entity label.
+ *
+ * This processor unify this labels to one common label.
+ *
+ * @author Cedric Richter
+ */
 public class LabelPreprocessor extends APipe<ILabelledEntity, ILabelledEntity> {
 
 
@@ -23,6 +31,14 @@ public class LabelPreprocessor extends APipe<ILabelledEntity, ILabelledEntity> {
 
     private Multimap<String, String> sameLabel;
 
+    /**
+     * The given map have to map each same relation in both direct.
+     * Like:
+     *  Location and Place should be mapped by:
+     *      Location --> Place
+     *      Place --> Location
+     * @param sameLabel a multimap of labels which are defined to be the same
+     */
     public LabelPreprocessor(Multimap<String, String> sameLabel) {
         this.sameLabel = sameLabel;
     }

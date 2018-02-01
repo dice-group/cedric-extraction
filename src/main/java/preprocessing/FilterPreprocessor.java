@@ -7,6 +7,11 @@ import preprocessing.filter.IEntityFilter;
 
 import java.util.List;
 
+/**
+ * A pipe which only emits entities which are not marked by any defined filter
+ *
+ * @author Cedric Richter
+ */
 public class FilterPreprocessor extends APipe<ILabelledEntity, ILabelledEntity> {
 
     private List<IEntityFilter> filters;

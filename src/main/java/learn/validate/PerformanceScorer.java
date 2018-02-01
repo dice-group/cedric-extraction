@@ -1,5 +1,12 @@
 package learn.validate;
 
+
+/**
+ *
+ * This score calculates the combined precision independent of the used relation.
+ *
+ * @author Cedric Richter
+ */
 public class PerformanceScorer implements ITestScorer{
 
     private int count;

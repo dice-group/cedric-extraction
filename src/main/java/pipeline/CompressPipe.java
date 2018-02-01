@@ -1,5 +1,11 @@
 package pipeline;
 
+/**
+ * A helper pipe which hides pipes between the input pipe and output pipe
+ * @author Cedric Richter
+ * @param <S> source type
+ * @param <T> target type
+ */
 public class CompressPipe<S, T> implements IPipe<S, T> {
 
     private IPipe<S, ?> inPipe;

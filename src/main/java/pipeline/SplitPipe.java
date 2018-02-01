@@ -2,6 +2,13 @@ package pipeline;
 
 import com.sun.tools.javac.util.Pair;
 
+/**
+ * An abstract class which helps to implement a pipe which splits the input
+ * @author Cedric Richter
+ * @param <S> source type
+ * @param <A> first sink type
+ * @param <T> second sink type
+ */
 public abstract class SplitPipe<S, A, T> implements ISink<S>{
 
     private ISink<A> sinkA;

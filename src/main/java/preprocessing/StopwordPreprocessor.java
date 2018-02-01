@@ -11,6 +11,11 @@ import pipeline.APipe;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A pipe which identify stop words in the feature set and remove them
+ *
+ * @author Cedric Richter
+ */
 public class StopwordPreprocessor extends APipe<ILabelledEntity, ILabelledEntity> {
 
     private CharArraySet stopwords;

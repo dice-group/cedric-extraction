@@ -4,6 +4,12 @@ import com.mongodb.DBObject;
 import io.IDBConfiguration;
 import io.IDBLoadingTask;
 
+/**
+ *
+ * A simple flat implementation for a MongoDB task
+ *
+ * @author Cedric Richter
+ */
 public class SimpleDBLoadingTask implements IDBLoadingTask {
 
     private IDBConfiguration configuration;

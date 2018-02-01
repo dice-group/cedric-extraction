@@ -7,6 +7,11 @@ import model.ITrainingData;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * A base model which manages different search spaces for different input categories,
+ *
+ * @author Cedric Richter
+ */
 public class RCModel {
 
     private Map<LabelKey, IRCSearchSpace> model;
@@ -18,6 +23,10 @@ public class RCModel {
     }
 
 
+    /**
+     * Add the training data to the matching search space
+     * @param data training data
+     */
     public void addData(ITrainingData data){
         LabelKey key = new LabelKey(data.getCategory().getFirstLabel().toLowerCase(),
                                     data.getCategory().getSecondLabel().toLowerCase());
@@ -36,6 +45,14 @@ public class RCModel {
     }
 
 
+    /**
+     * Uses the given label combination to select a search space.
+     * Then the search spaces will be queried for the features
+     * @param firstLabel first detected entity label
+     * @param secondLabel second detected entity label
+     * @param features a set of features for the given entity
+     * @return a prediction of results for each feature (f --> 2^R)
+     */
     public Multimap<String, IRCSearchResult> predict(String firstLabel, String secondLabel, Iterable<String> features){
         Multimap<String, IRCSearchResult> out = HashMultimap.create();
 

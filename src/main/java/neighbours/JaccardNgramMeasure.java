@@ -5,6 +5,11 @@ import com.google.common.collect.ImmutableSet;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * A distant measure which splits the string in ngrams and then uses jaccard distance
+ *
+ * @author Cedric Richter
+ */
 public class JaccardNgramMeasure implements IStringMeasure {
 
     private int n;

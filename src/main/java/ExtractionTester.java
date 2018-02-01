@@ -5,43 +5,62 @@ import io.IDBConfiguration;
 import io.IDBLoadingTask;
 import io.LemmaEntityMapper;
 import io.MongoLoadingPipe;
+import io.config.ConfigHandler;
+import io.config.GsonApplicationConfig;
 import io.simple.SimpleDBConfiguration;
 import io.simple.SimpleDBCredentials;
 import io.simple.SimpleDBLoadingTask;
-import javafx.util.Pair;
 import learn.*;
-import learn.validate.IClassificationTestResult;
+import model.IConfiguration;
 import model.ILabelledEntity;
 import model.Relation;
 import pipeline.IPipe;
-import pipeline.MergePipe;
 import pipeline.SingleCachedSink;
-import preprocessing.FilterPreprocessor;
-import preprocessing.filter.PredicateFilter;
-import preprocessing.string.PrintOutSink;
+
+import preprocessing.string.WriteOutSink;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
+import java.nio.file.Paths;
 import java.util.concurrent.TimeUnit;
 
+/**
+ *
+ * The extraction tester allows to perform Relation Extraction on real input data.
+ * Firstly it trained the model and then a user can type in single sentences.
+ * The output will be all found relations in the sentence.
+ *
+ * It is possible to pass a path to a configuration file as an argument.
+ *
+ * @author Cedric Richter
+ */
 public class ExtractionTester {
 
     public static void main(String[] args){
 
-        int window = 2;
-        int k = 5;
+        String path = "./system_config.json";
 
-        IBayesEstimator estimator = new TfidfBayesEstimator(1.0);
+        if(args.length > 0){
+            path = args[0];
+        }
+
+        ConfigHandler.injectCustomConfig(ExtractionTester.class.getSimpleName(), Paths.get(path));
+        ConfigHandler handler = ConfigHandler.createCustom(ExtractionTester.class.getSimpleName());
+        IConfiguration base = handler.getConfig("learner", new GsonApplicationConfig());
+
+        int window = base.getLexicalWindow();
+        int k = base.getNeighbour();
+
+        IBayesEstimator estimator = new TfidfBayesEstimator(base.getBayesSmoothing());
 
         RelationExtPipeFactory factory = new RelationExtPipeFactory();
 
 
         //Train Pipe
-        SingleCachedSink<IRelationClassificator> classificatorSink = new SingleCachedSink<>();
+        SingleCachedSink<IRelationClassifier> classificatorSink = new SingleCachedSink<>();
 
-        IPipe<ILabelledEntity, IRelationClassificator> trainModelPipe =
+        IPipe<ILabelledEntity, IRelationClassifier> trainModelPipe =
                 factory.createTrainingPipe(window, estimator,
                         new VotingRelationFactory(
                                 new RCDefaultFactory(k, estimator)
@@ -55,11 +74,11 @@ public class ExtractionTester {
 
 
         //Setup train data loading
-        IDBConfiguration configuration = new SimpleDBConfiguration(
+        IDBConfiguration configuration = handler.getConfig("mongo", new SimpleDBConfiguration(
                 "ds113738.mlab.com",  13738,
                 new SimpleDBCredentials("admin", "admin".toCharArray() ),
                 "relationextraction"
-        );
+        ));
 
         IDBLoadingTask trainTask =
                 new SimpleDBLoadingTask(configuration, "DataSet", null);
@@ -72,10 +91,10 @@ public class ExtractionTester {
 
         System.out.println("Time for Training: "+watch.elapsed(TimeUnit.MILLISECONDS)+" ms");
 
-        IRelationClassificator classificator = classificatorSink.getObj();
+        IRelationClassifier classificator = classificatorSink.getObj();
 
         IPipe<String, Relation> processor = factory.createRelationExtractionPipe(classificator, window);
-        processor.setSink(new PrintOutSink());
+        processor.setSink(new WriteOutSink(System.out));
 
         BufferedReader br = null;
 
@@ -108,10 +127,6 @@ public class ExtractionTester {
                 }
             }
         }
-
-
-
-
 
     }
 

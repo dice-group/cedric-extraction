@@ -7,6 +7,12 @@ import javafx.util.Pair;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+/**
+ * A pipe which synchronizes two sources and outputs a pair of results.
+ * @author Cedric Richter
+ * @param <S> first source type
+ * @param <T> second source type
+ */
 public class MergePipe<S, T>{
 
     private ISink<Pair<S, T>> sink;

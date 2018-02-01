@@ -9,6 +9,24 @@ import org.bson.BSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A default mapper for MongoDB entries.
+ * The MongoDB entries have to follow the following convention:
+ *
+ *  {
+ *      "predicate": STR,
+ *      "source": STR,
+ *      "sourceLabel": STR,
+ *      "sourcePosition": INT,
+ *      "sentence": STR,
+ *      "target": STR,
+ *      "targetLabel": STR,
+ *      "targetPosition": INT
+ *  }
+ *
+ *
+ * @author Cedric Richter
+ */
 public class DefaultEntityMapper implements IEntityMapper {
 
 

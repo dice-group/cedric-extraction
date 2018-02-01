@@ -1,8 +1,15 @@
 package learn;
 
 import model.ILexicalFeature;
-import neighbours.NeighbourSearch;
 
+/**
+ *
+ * A decorator for IRCSearchResults.
+ *
+ * It allows to scale the accuracy by a given distant.
+ *
+ * @author Cedric Richter
+ */
 public class DistantScaledResult implements IRCSearchResult {
 
     private double distant;

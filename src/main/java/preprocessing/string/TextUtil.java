@@ -11,6 +11,12 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Based on:
+ * {@see https://github.com/dice-group/FOX/blob/master/src/main/java/org/aksw/fox/utils/FoxTextUtil.java}
+ *
+ * @author Cedric Richter
+ */
 public class TextUtil {
     public static Logger logger       = LogManager.getLogger(TextUtil.class);
     /**

@@ -2,6 +2,11 @@ package preprocessing.filter;
 
 import model.ILabelledEntity;
 
+/**
+ * A filter based on the label of the labelled entity
+ *
+ * @author Cedric Richter
+ */
 public class PredicateFilter implements IEntityFilter {
 
     private String predicate;

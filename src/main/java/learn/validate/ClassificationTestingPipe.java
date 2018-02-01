@@ -1,14 +1,25 @@
 package learn.validate;
 
-import learn.IRelationClassificator;
+import learn.IRelationClassifier;
+import learn.validate.simple.SimpleClassificationTestResult;
 import model.ILabelledEntity;
 import pipeline.APipe;
 
+/**
+ *
+ * A pipe which predicts a relation for a given entity and emits the prediction.
+ *
+ * @author Cedric Richter
+ */
 public class ClassificationTestingPipe extends APipe<ILabelledEntity, IClassificationTestResult> {
 
-    private IRelationClassificator classificator;
+    private IRelationClassifier classificator;
 
-    public ClassificationTestingPipe(IRelationClassificator classificator) {
+    /**
+     *
+     * @param classificator the classifier used for predictions
+     */
+    public ClassificationTestingPipe(IRelationClassifier classificator) {
         this.classificator = classificator;
     }
 
