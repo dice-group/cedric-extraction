@@ -1,0 +1,16 @@
+{
+  "learn":{
+    "window": 2,
+    "bayes": 1.0,
+    "neighbour": 20
+  },
+  "mongo":{
+    "hostname":"ds113738.mlab.com",
+    "port": 13738,
+    "credentials":{
+      "name":"admin",
+      "password":"admin"
+    },
+    "database":"relationextraction"
+  }
+}
