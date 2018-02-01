@@ -2,10 +2,10 @@
 
 This library implements an approach to extract RDF relations from a given sentence.
 
-##Requirements
+## Requirements
 Java 8, Maven 3
 
-##Example
+## Example
 Input:
 ````
 Barack Obama is married to Michelle Obama.
@@ -15,7 +15,7 @@ Output:
 <http://dbpedia.org/resource/Barack_Obama> <http://dbpedia.org/ontology/spouse> <http://dbpedia.org/resource/Michelle_Obama>.
 ````
 
-##Config
+## Config
 A sample config file
 ````JSON
 {
@@ -40,13 +40,13 @@ Description for learn:
 * bayes: the bayes smoothing parameter for unknown features
 * neighbour: the number of nearest neighbours to select
 
-##How to use
+## How to use
 The project consists of three main entry points:
 1. ``RelationExtraction.java``
 2. ``ExtractionTester.java``
 3. ``FileExtractor.java``
 
-###Relation Extraction
+### Relation Extraction
 This project can be start up by giving a path to a configuration file.
 If the path is invalid or not given, then it will start up with a default configuration.
 The script will train a model on a set of training data.
@@ -57,12 +57,12 @@ Output:
 * Recall for each relation
 * The overall precision
 
-###Extraction Tester
+### Extraction Tester
 This project can be start up by giving a path to a configuration file.
 If the path is invalid or not given, then it will start up with a default configuration.
 The script will train a model. Then the user can give input sentences. The script will print found relations in Turtle format.
 
-###File Extractor
+### File Extractor
 To start the script you have to provide the following arguments:
 1. a config file
 2. input path for file containing sentences
