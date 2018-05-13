@@ -1,8 +1,8 @@
 package org.dice_research.cedric_extraction.io.simple;
 
 import com.mongodb.DBObject;
-import io.IDBConfiguration;
-import io.IDBLoadingTask;
+import org.dice_research.cedric_extraction.io.IDBConfiguration;
+import org.dice_research.cedric_extraction.io.IDBLoadingTask;
 
 /**
  *
