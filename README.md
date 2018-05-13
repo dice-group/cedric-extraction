@@ -1,3 +1,5 @@
+[![](https://jitpack.io/v/dice-group/cedric-extraction.svg)](https://jitpack.io/#dice-group/cedric-extraction)
+
 # Relation Extraction
 
 This library implements an approach to extract RDF relations from a given sentence.
