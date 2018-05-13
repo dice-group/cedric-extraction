@@ -2,8 +2,8 @@ package org.dice_research.cedric_extraction.io;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.nlp.simple.Sentence;
-import model.ILabelledEntity;
-import model.SimpleLabelledEntity;
+import org.dice_research.cedric_extraction.model.ILabelledEntity;
+import org.dice_research.cedric_extraction.model.SimpleLabelledEntity;
 import org.bson.BSONObject;
 
 import java.util.ArrayList;

@@ -1,7 +1,7 @@
 package org.dice_research.cedric_extraction.learn.validate;
 
-import org.dice_research.cedric_extraction.java.util.List;
-import org.dice_research.cedric_extraction.java.util.Map;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
